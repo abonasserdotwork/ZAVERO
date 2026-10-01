@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const tempLink =
-  'mongodb+srv://abonasserwork_db_user:4E5GimTZibEnmS5n@zaverodb.lr54qez.mongodb.net/zvoDB?appName=zaveroDB';
+const dbLink = process.env.MONGO_URI;
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(tempLink).then(() => {
+    await mongoose.connect(dbLink).then(() => {
       console.log('Connected To DB Successfully');
     });
     mongoose.connection.on('error', () => {

@@ -1,14 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 const DB = require('./config/db.config');
 const PORT = process.env.PORT || 5000;
-
+const originLINK = process.env.CLIENT_URL;
 //middelwares
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: `${originLINK}`,
     credentials: true,
   })
 );
