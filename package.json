@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "concurrently \"npm run dev -w server\" \"npm run dev -w client\"",
     "server": "npm run dev -w server",
-    "client": "npm run dev -w client"
+    "client": "npm run dev -w client",
+    "seed": "node server/src/seeder.js",
+    "seed:destroy": "node server/src/seeder.js --destroy"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

@@ -3,9 +3,10 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
-const DB = require('./config/db.config');
+const { connectDB } = require('./config/db.config');
 const PORT = process.env.PORT || 5000;
 const originLINK = process.env.CLIENT_URL;
+
 //middelwares
 app.use(
   cors({
@@ -29,7 +30,18 @@ app.get('/api/health', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-//Starting Point
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Starting the server after connecting to the database
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
