@@ -6,6 +6,7 @@ const { notFound, errorHandler } = require('./middleware/error.middleware');
 const { connectDB } = require('./config/db.config');
 const PORT = process.env.PORT || 5000;
 const originLINK = process.env.CLIENT_URL;
+const cookieParser = require("cookie-parser");
 
 //middelwares
 app.use(
@@ -15,8 +16,12 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 //Routes
+const authRoutes = require("./routes/auth.routes.js");
+const userRoutes = require("./routes/user.routes.js");
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -25,6 +30,9 @@ app.get('/api/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
   });
 });
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 //error handling middleware
 app.use(notFound);

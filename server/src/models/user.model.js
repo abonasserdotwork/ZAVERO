@@ -52,12 +52,12 @@ UserSchema.pre('save', async function () {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
-UserSchema.methods.matchPassword = (EnteredPassword) => {
+UserSchema.methods.matchPassword = function (EnteredPassword) {
   return bcrypt.compare(EnteredPassword, this.password);
 };
 
 UserSchema.methods.generateToken = () => {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
 };
 
 module.exports = mongoose.model('User', UserSchema);
