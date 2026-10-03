@@ -2,64 +2,68 @@
 
 ### MERN Stack E-Commerce Platform
 
-ZAVERO is a full-stack e-commerce application built with the **MERN stack** (MongoDB, Express.js, React.js, and Node.js). The project is being developed with a modular backend architecture, secure authentication, and a scalable foundation for product management, shopping carts, orders, and payments.
+ZAVERO is a full-stack e-commerce application built with the **MERN stack** (MongoDB, Express.js, React.js, and Node.js). It is being developed with a modular backend architecture, secure authentication, and a scalable foundation for product management, shopping carts, orders, and payments.
 
-> 🚧 **Status:** In Development
+> 🚧 **Status:** In Development — Phases 1–3 completed; Phase 4 is next.
 
 ## ✨ Features
 
 ### Implemented
 
-* User registration and login
-* Password hashing with bcrypt
-* JWT-based authentication
-* HTTP-only authentication cookies
-* Protected routes and role-based access middleware
-* User profile retrieval
-* MongoDB integration with Mongoose
-* Product, category, cart, order, review, address, and coupon models
-* Database seeder with sample users, categories, and products
-* Centralized API error handling and validation foundation
+- User registration and login
+- Password hashing and verification with bcrypt
+- JWT-based authentication using HTTP-only cookies
+- Protected routes and role-based access middleware
+- Logout and authenticated-user retrieval
+- User profile retrieval and updates
+- Avatar upload support
+- Password updates with current-password verification
+- Address create, read, update, and delete operations
+- Address ownership validation
+- Admin endpoint for retrieving users
+- MongoDB integration with Mongoose
+- User, address, product, category, cart, order, review, and coupon models
+- Database seeder with sample users, categories, and products
+- Centralized API error handling and request-validation foundation
+- Manual integration testing for authentication, authorization, profile, and address endpoints
 
 ### Planned
 
-* User profile editing and avatar upload
-* Password updates
-* Address management
-* Admin user management
-* Product catalogue with search, filtering, and sorting
-* Persistent shopping cart
-* Checkout and order management
-* Payment integration
-* Product reviews and ratings
-* Admin dashboard
+- Product catalogue with search, filtering, pagination, and sorting
+- Product detail endpoints and category counts
+- Admin product management and soft deletion
+- Product reviews and aggregate ratings
+- Persistent shopping cart and guest-cart merge
+- Stock validation and server-side cart totals
+- Checkout and order management
+- Payment integration
+- Admin dashboard
+- Automated testing, hardening, and deployment
 
 ## 🛠️ Tech Stack
 
 **Frontend**
-
-* React
-* Vite
-* Axios
+- React
+- Vite
+- Axios
 
 **Backend**
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JSON Web Tokens (JWT)
-* bcrypt
-* express-validator
-* cookie-parser
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JSON Web Tokens (JWT)
+- bcrypt
+- express-validator
+- cookie-parser
 
 **Development Tools**
-
-* ESLint
-* Prettier
-* npm Workspaces
-* Git & GitHub
-* Postman
+- ESLint
+- Prettier
+- npm Workspaces
+- concurrently
+- Git & GitHub
+- Postman
 
 ## 📁 Project Structure
 
@@ -70,14 +74,14 @@ ZAVERO/
 │   ├── src/
 │   │   ├── config/         # Database configuration
 │   │   ├── controllers/    # Request controllers
-│   │   ├── middleware/    # Authentication and middleware
-│   │   ├── models/        # Mongoose models
-│   │   ├── routes/        # API routes
-│   │   ├── validators/    # Request validation
-│   │   ├── seeder.js      # Sample database data
-│   │   ├── app.js         # Express application
+│   │   ├── middleware/     # Authentication and shared middleware
+│   │   ├── models/         # Mongoose models
+│   │   ├── routes/         # API routes
+│   │   ├── validators/     # Request validation
+│   │   ├── seeder.js       # Sample database data
+│   │   ├── app.js          # Express application
 │   │   └── ...
-│   └── .env
+│   └── .env                # Local environment variables (not committed)
 ├── package.json
 ├── .gitignore
 └── README.md
@@ -87,12 +91,10 @@ ZAVERO/
 
 ### Prerequisites
 
-Make sure you have installed:
-
-* [Node.js](https://nodejs.org/)
-* npm
-* [MongoDB Atlas](https://www.mongodb.com/atlas) or a local MongoDB instance
-* Git
+- [Node.js](https://nodejs.org/)
+- npm
+- [MongoDB Atlas](https://www.mongodb.com/atlas) or a local MongoDB instance
+- Git
 
 ### Installation
 
@@ -131,7 +133,7 @@ SEED_CUSTOMER_EMAIL=customer@example.com
 SEED_CUSTOMER_PASSWORD=your_secure_password
 ```
 
-Replace the example values with your own. Never commit `.env` or expose database credentials, JWT secrets, or real passwords.
+Replace the example values with your own. Never commit `.env` files or expose database credentials, JWT secrets, real passwords, or authentication tokens.
 
 ### Run the Application
 
@@ -141,81 +143,95 @@ Start the development environment using the configured root script:
 npm run dev
 ```
 
-The development servers are configured for:
+The current development servers are configured for:
 
-* **Frontend:** `http://localhost:5173`
-* **Backend:** `http://localhost:5000`
+- **Frontend:** `http://localhost:5173`
+- **Backend:** `http://localhost:5000`
+
+Backend health check:
+
+`http://localhost:5000/api/health`
+
+If your local scripts or ports differ, follow the values in your current project configuration.
 
 ### Seed the Database
 
-To populate the database with sample categories, products, and users:
+Populate the database with sample categories, products, and users:
 
 ```bash
 npm run seed
 ```
 
-To remove the seeded data:
+Remove seeded data:
 
 ```bash
 npm run seed:destroy
 ```
 
-Use these commands carefully, especially when working with a database containing data you want to keep.
+Use the destroy command carefully, especially when working with a database containing data you want to keep.
 
-## 🔐 Authentication API
+## 🔐 Authentication & User API
 
-The authentication endpoints currently implemented include:
+The following endpoints have been implemented:
 
-| Method | Endpoint             | Description                               |
-| ------ | -------------------- | ----------------------------------------- |
-| POST   | `/api/auth/register` | Register a new user                       |
-| POST   | `/api/auth/login`    | Log in and receive a JWT                  |
-| POST   | `/api/auth/logout`   | Clear the authentication cookie           |
-| GET    | `/api/auth/me`       | Retrieve the authenticated user           |
-| GET    | `/api/users/me`      | Retrieve the authenticated user's profile |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Log in and set the authentication cookie |
+| POST | `/api/auth/logout` | Clear the authentication cookie |
+| GET | `/api/auth/me` | Retrieve the authenticated user |
+| GET | `/api/users/me` | Retrieve the authenticated user's profile |
+| PUT | `/api/users/me` | Update the authenticated user's profile |
+| PUT | `/api/users/password` | Update the account password |
+| GET | `/api/users` | Admin: retrieve users |
+| POST | `/api/addresses` | Add an address |
+| GET | `/api/addresses` | List the authenticated user's addresses |
+| PUT | `/api/addresses/:id` | Update an owned address |
+| DELETE | `/api/addresses/:id` | Delete an owned address |
 
-Authentication uses JWT verification and HTTP-only cookies. Protected routes require a valid authentication token, while admin-specific access is controlled through role-based middleware.
+Authentication uses JWT verification and HTTP-only cookies. Protected routes require a valid token, and admin-specific access is controlled through role-based middleware.
 
 ## 🗃️ Database Models
 
-The project currently includes the following Mongoose models:
+The project currently includes these Mongoose models:
 
-* **User:** Account information, credentials, and roles
-* **Address:** User delivery addresses
-* **Category:** Product categories and parent categories
-* **Product:** Product details, pricing, stock, and ratings
-* **Cart:** User shopping cart and item quantities
-* **Order:** Purchase records and order status
-* **Review:** Product ratings and comments
-* **Coupon:** Discount codes and usage limits
+- **User:** Account information, credentials, and roles
+- **Address:** User delivery addresses
+- **Category:** Product categories and parent categories
+- **Product:** Product details, pricing, stock, and ratings
+- **Cart:** User shopping cart and item quantities
+- **Order:** Purchase records and order status
+- **Review:** Product ratings and comments
+- **Coupon:** Discount codes and usage limits
 
 Cart items and order items are embedded within their parent documents.
 
 ## 🧭 Development Roadmap
 
-| Phase | Focus                                 | Status         |
-| ----- | ------------------------------------- | -------------- |
-| 1     | Project Scaffolding & Tooling         | ✅ Completed    |
-| 2     | Database Design & Mongoose Models     | ✅ Completed    |
-| 3     | Authentication & User Accounts        | 🚧 In Progress |
-| 4     | Product Catalogue & Cart              | ⏳ Planned      |
-| 5     | Orders, Checkout & Payments           | ⏳ Planned      |
-| 6     | React Storefront UI                   | ⏳ Planned      |
-| 7     | Admin Console, Hardening & Deployment | ⏳ Planned      |
+| Phase | Focus | Status |
+| --- | --- | --- |
+| 1 | Project Scaffolding & Tooling | ✅ Completed |
+| 2 | Database Design & Mongoose Models | ✅ Completed |
+| 3 | Authentication & User Accounts | ✅ Completed |
+| 4 | Product Catalogue & Cart | 🔜 Next |
+| 5 | Orders, Checkout & Payments | ⏳ Planned |
+| 6 | React Storefront UI | ⏳ Planned |
+| 7 | Admin Console, Hardening & Deployment | ⏳ Planned |
 
 ## 🔒 Security
 
-Security considerations include:
+Current security measures include:
 
-* Hashing passwords with bcrypt
-* Using JWTs for authentication
-* Storing authentication tokens in HTTP-only cookies
-* Verifying JWT signatures on protected routes
-* Applying role-based authorization
-* Keeping environment variables and credentials out of version control
-* Validating incoming request data
+- Hashing and verifying passwords with bcrypt
+- Using JWTs for authentication
+- Storing authentication tokens in HTTP-only cookies
+- Verifying JWT signatures on protected routes
+- Applying role-based authorization
+- Enforcing ownership checks for user addresses
+- Keeping environment variables and credentials out of version control
+- Validating incoming request data
 
-Further hardening, automated tests, and production deployment are planned.
+Automated testing, additional production hardening, and deployment are still to come.
 
 ## 🤝 Contributing
 
@@ -230,7 +246,7 @@ This project is currently under active development. Suggestions, feedback, and c
 
 **Mohamed Abdelnasser**
 
-* GitHub: [@abonasserdotwork](https://github.com/abonasserdotwork)
+- GitHub: [@abonasserdotwork](https://github.com/abonasserdotwork)
 
 ---
 
