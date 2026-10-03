@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema(
   {
+    avatar: {
+      type: String,
+      default: ""
+    },
     name: {
       type: String,
       required: [true, 'Name is Required'],
@@ -56,7 +60,7 @@ UserSchema.methods.matchPassword = function (EnteredPassword) {
   return bcrypt.compare(EnteredPassword, this.password);
 };
 
-UserSchema.methods.generateToken = () => {
+UserSchema.methods.generateToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
 };
 

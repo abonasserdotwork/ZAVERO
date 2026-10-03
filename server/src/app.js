@@ -21,6 +21,10 @@ app.use(cookieParser());
 //Routes
 const authRoutes = require("./routes/auth.routes.js");
 const userRoutes = require("./routes/user.routes.js");
+const addressRoutes = require("./routes/address.routes.js");
+const path = require("path");
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -31,8 +35,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/addresses", addressRoutes);
 
 //error handling middleware
 app.use(notFound);

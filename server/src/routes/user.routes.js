@@ -1,6 +1,7 @@
 const express = require("express");
-const { protect } = require("../middleware/auth.middleware");
-
+const { protect, adminOnly } = require("../middleware/auth.middleware");
+const { updateProfile, updatePassword, getAllUsers } = require("../controllers/user.controller.js");
+const upload = require("../middleware/upload.middleware.js");
 
 const router = express.Router();
 
@@ -21,5 +22,11 @@ router.get("/me", (req, res) => {
         },
     })
 });
+
+router.put("/profile", upload.single("avatar"), updateProfile);
+router.put("/password", updatePassword);
+
+router.get("/", adminOnly, getAllUsers);
+
 
 module.exports = router;
